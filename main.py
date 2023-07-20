@@ -4,7 +4,7 @@ from utils import utils
 
 def main():
     vacancy_primary_key = 1
-    #счетчик primary_key для таблицы с вакансиями
+    # счетчик primary_key для таблицы с вакансиями
 
     utils.drop_tables()
     utils.create_tables()
@@ -30,11 +30,11 @@ def main():
 
         hh = HHParcer.Employer(keyword)
         employer_id = hh.select_employer_id()
-        if employer_id == None:
+        if employer_id is None:
             continue
 
         employers_list.append(employer_id)
-    utils.fill_employer_table(employers_list)
+    utils.fill_employers_table(employers_list)
 
     print('Загрузка вакансий...')
 
@@ -45,7 +45,7 @@ def main():
         hh = HHParcer.Vacancy(employer_hh_id, employer_name)
         vacancies = hh.get_vacancies(pages_count)
 
-        utils.fill_vacancy_table(vacancies, vacancy_primary_key)
+        utils.fill_vacancies_table(vacancies, vacancy_primary_key)
         vacancy_primary_key += len(vacancies)
 
     print()
@@ -66,6 +66,7 @@ def main():
         dbm = DBManager.DBManager()
 
         if command == "0":
+            print("\nРабота программы завершена!")
             break
         elif command == "1":
             employers = dbm.get_companies_and_vacancies_count()
@@ -80,9 +81,11 @@ def main():
             vacancies = dbm.get_vacancies_with_higher_salary()
             utils.print_vacancies(vacancies)
         elif command == "5":
-            print("Введите ключевое слово.")
-            keyword = input(">>> ")
-            vacancies = dbm.get_vacancies_with_keyword(keyword)
+            print("Введите ключевые слова через запятую.")
+            keystring = input(">>> ")
+            print()
+            keywords = keystring.replace(" ", "").split(",")
+            vacancies = dbm.get_vacancies_with_keyword(keywords)
             utils.print_vacancies(vacancies)
         else:
             print("Введенное значение неверно!")

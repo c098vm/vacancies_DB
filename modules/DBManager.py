@@ -16,7 +16,6 @@ class DBManager:
         )
         self.cursor = self.connection.cursor()
 
-
     def get_companies_and_vacancies_count(self) -> list[Any]:
         """
         Получает список компаний и количество вакансий у каждой.
@@ -78,7 +77,6 @@ class DBManager:
 
         return record
 
-
     def get_avg_salary(self):
         """
         Получает среднюю зарплату по вакансиям.
@@ -92,7 +90,6 @@ class DBManager:
         average_salary = (average_salary_from + average_salary_to) / 2
 
         return average_salary
-
 
     def get_vacancies_with_higher_salary(self):
         """
@@ -109,8 +106,7 @@ class DBManager:
 
         return result_vacancies
 
-
-    def get_vacancies_with_keyword(self, keyword: str):
+    def get_vacancies_with_keyword(self, keywords: list):
         """
         Получает список всех вакансий, в названии которых содержатся переданные в метод слова.
         Возвращает список словарей аналогично функции get_all_vacancies.
@@ -118,8 +114,10 @@ class DBManager:
 
         result_vacancies = []
         vacancies = DBManager.get_all_vacancies(self)
+
         for vacancy in vacancies:
-            if keyword.lower() in vacancy["vacancy_name"].lower():
-                result_vacancies.append(vacancy)
+            for word in keywords:
+                if word.lower() in vacancy["vacancy_name"].lower():
+                    result_vacancies.append(vacancy)
 
         return result_vacancies

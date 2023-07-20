@@ -59,7 +59,7 @@ def create_tables():
         cursor.close()
         connection.close()
 
-def fill_employer_table(record_list):
+def fill_employers_table(record_list):
     """
     Заполняет таблицу employers данными из списка словарей.
     :param record_list: список словарей.
@@ -90,7 +90,7 @@ def fill_employer_table(record_list):
         cursor.close()
         connection.close()
 
-def fill_vacancy_table(record_list, id=None):
+def fill_vacancies_table(record_list, id=None):
     """
     Заполняет таблицу vacancies данными из списка словарей.
     :param record_list: список словарей.
