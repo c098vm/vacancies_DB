@@ -3,6 +3,10 @@ from modules.error import ParsingError
 
 
 class Employer:
+    """
+    Класс для работы с компаниями, полученными через API.
+    """
+
     url = "https://api.hh.ru/employers"
     headers = {
         "User-Agent": "MyAppVac/1.01"
@@ -15,7 +19,9 @@ class Employer:
         }
 
     def get_request(self):
-        """ Метод запроса json-данных через API """
+        """
+        Метод запроса json-данных через API.
+        """
 
         response = requests.get(url=self.url, headers=self.headers, params=self.params)
         if response.status_code != 200:
@@ -23,7 +29,14 @@ class Employer:
         return response.json()["items"]
 
     def select_employer_id(self):
-        """"""
+        """
+        Метод выбора интересующей компании из полученного списка.
+        Возвращает словарь в формате:
+        {
+        "hh_id": "id компании в HeadHunter",
+        "name": "название компании"
+        }
+        """
 
         print()
         print("Загрузка...")
@@ -59,7 +72,9 @@ class Employer:
 
 
 class Vacancy:
-    """ Класс получения данных через API HeadHunter """
+    """
+    Класс для получения вакансий через API.
+    """
 
     url = "https://api.hh.ru/vacancies"
     headers = {
@@ -78,7 +93,9 @@ class Vacancy:
         }
 
     def get_request(self):
-        """ Метод запроса json-данных через API """
+        """
+        Метод запроса json-данных через API.
+        """
 
         response = requests.get(url=self.url, headers=self.headers, params=self.params)
         if response.status_code != 200:
@@ -87,7 +104,20 @@ class Vacancy:
         return response.json()["items"]
 
     def get_vacancies(self, page_count):
-        """ Метод сохранения вакансий в список"""
+        """
+        Метод сохранения вакансий в список.
+        Незаданные (Null) в HeadHunter значения зарплаты записываются как 0.
+        Возвращает список словарей в формате:
+        {
+        "hh_id": "id вакансии в HeadHunter",
+        "employer_hh_id": "id компании в HeadHunter",
+        "name": "название компании",
+        "salary_from": "зарплата от",
+        "salary_to": "зарплата до",
+        "url": "url-адрес"
+        }
+        """
+
 
         self.vacancies = []
         salary_from = 0

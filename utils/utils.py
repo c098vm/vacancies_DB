@@ -1,6 +1,11 @@
 import psycopg2
 
 def drop_tables():
+    """
+    Удаляет таблицы employers и vacancies, если они ранее были созданы.
+    :return: None.
+    """
+
     connection = psycopg2.connect(
         user="postgres",
         password="postgres",
@@ -23,6 +28,11 @@ def drop_tables():
         connection.close()
 
 def create_tables():
+    """
+    Создает таблицы employers и vacancies.
+    :return: None.
+    """
+
     connection = psycopg2.connect(
         user="postgres",
         password="postgres",
@@ -50,6 +60,12 @@ def create_tables():
         connection.close()
 
 def fill_employer_table(record_list):
+    """
+    Заполняет таблицу employers данными из списка словарей.
+    :param record_list: список словарей.
+    :return: None.
+    """
+
     connection = psycopg2.connect(
         user="postgres",
         password="postgres",
@@ -75,6 +91,13 @@ def fill_employer_table(record_list):
         connection.close()
 
 def fill_vacancy_table(record_list, id=None):
+    """
+    Заполняет таблицу vacancies данными из списка словарей.
+    :param record_list: список словарей.
+    :param id: хранит очередной индекс primaty key.
+    :return: None.
+    """
+
     connection = psycopg2.connect(
         user="postgres",
         password="postgres",
@@ -105,6 +128,11 @@ def fill_vacancy_table(record_list, id=None):
         connection.close()
 
 def print_vacancies(vacancies):
+    """
+    Распечатывает список вакансий в читаемом формате.
+    :param vacancies: список словарей с данными вакансий.
+    :return: None.
+    """
     for vacancy in vacancies:
         employer_name = vacancy["employer_name"]
         vacancy_name = vacancy["vacancy_name"]
@@ -121,10 +149,21 @@ def print_vacancies(vacancies):
               f"Ссылка: {vacancy_url}.\n")
 
 def print_employers(employers):
+    """
+    Распечатывает список компаний в читаемом формате.
+    :param employers: список словарей с данными компаний.
+    :return: None
+    """
+
     for employer in employers:
         employer_name = employer["employer_name"]
         vacancies_count = employer["vacancies_count"]
         print(f"Компания: {employer_name}. Количество вакансий в базе данных: {vacancies_count}.")
 
 def print_average_salary(average_salary):
+    """
+    Распечатывает значение средней зарплаты.
+    :param average_salary: значение средней зарплаты.
+    :return: None
+    """
     print(f"Средняя зарплата по всем вакансиям: {average_salary} руб.")

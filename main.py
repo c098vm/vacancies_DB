@@ -4,19 +4,22 @@ from utils import utils
 
 def main():
     vacancy_primary_key = 1
+    #счетчик primary_key для таблицы с вакансиями
+
     utils.drop_tables()
     utils.create_tables()
+
+    # employers_quantity = 10
 
     while True:
         print(f"Введите количество интересующих компаний для загрузки резюме (не более 10).")
         employers_quantity = (input(">>> "))
+
         if employers_quantity.isdigit():
             employers_quantity = int(employers_quantity)
             if employers_quantity in range(1, 11):
                 break
         print("Введенное значение неверно!")
-
-    # employers_quantity = 10
     print()
 
     employers_list = []
