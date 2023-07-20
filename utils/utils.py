@@ -136,16 +136,20 @@ def print_vacancies(vacancies):
     for vacancy in vacancies:
         employer_name = vacancy["employer_name"]
         vacancy_name = vacancy["vacancy_name"]
-        vacancy_salary_from = "от " + \
-                              str(vacancy["vacancy_salary_from"]) + \
-                              " " if vacancy["vacancy_salary_from"] != 0 else ""
-        vacancy_salary_to = "до " + \
-                            str(vacancy["vacancy_salary_to"]) + \
-                            " " if vacancy["vacancy_salary_to"] != 0 else ""
+        if vacancy["vacancy_salary_from"] == 0 and vacancy["vacancy_salary_to"] == 0:
+            vacancy_salary = "не указана."
+        else:
+            vacancy_salary_from = "от " + \
+                                  str(vacancy["vacancy_salary_from"]) + \
+                                  " " if vacancy["vacancy_salary_from"] != 0 else ""
+            vacancy_salary_to = "до " + \
+                                str(vacancy["vacancy_salary_to"]) + \
+                                " " if vacancy["vacancy_salary_to"] != 0 else ""
+            vacancy_salary = f"{vacancy_salary_from}{vacancy_salary_to}"
         vacancy_url = vacancy["vacancy_url"]
         print(f"Компания: {employer_name}.\n"
               f"Вакансия: {vacancy_name}.\n"
-              f"Зарплата: {vacancy_salary_from}{vacancy_salary_to}руб.\n"
+              f"Зарплата: {vacancy_salary}руб.\n"
               f"Ссылка: {vacancy_url}.\n")
 
 def print_employers(employers):
