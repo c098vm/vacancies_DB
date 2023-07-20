@@ -84,6 +84,8 @@ def main():
             keyword = input(">>> ")
             vacancies = dbm.get_vacancies_with_keyword(keyword)
             utils.print_vacancies(vacancies)
+        else:
+            print("Введенное значение неверно!")
 
         print()
 
