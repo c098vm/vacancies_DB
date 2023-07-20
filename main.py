@@ -34,6 +34,11 @@ def main():
             continue
 
         employers_list.append(employer_id)
+
+    if len(employers_list) == 0:
+        print("Работа программы завершена!")
+        exit()
+
     utils.fill_employers_table(employers_list)
 
     print('Загрузка вакансий...')
@@ -49,7 +54,12 @@ def main():
         vacancy_primary_key += len(vacancies)
 
     print()
-    print(f"Всего по выбранным компаниям загружено {vacancy_primary_key - 1} вакансий.")
+    if vacancy_primary_key == 1:
+        print("По выбранным компаниям вакансий не найдено.\n")
+        print("Работа программы завершена!")
+        exit()
+    print(f"Всего по выбранным компаниям загружено вакансий - {vacancy_primary_key - 1}.")
+
     print()
 
     while True:
@@ -66,7 +76,7 @@ def main():
         dbm = DBManager.DBManager()
 
         if command == "0":
-            print("\nРабота программы завершена!")
+            print("Работа программы завершена!")
             break
         elif command == "1":
             employers = dbm.get_companies_and_vacancies_count()
