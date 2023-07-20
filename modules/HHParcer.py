@@ -128,7 +128,7 @@ class Vacancy:
             try:
                 page_vacancies = self.get_request()
             except ParsingError as error:
-                print(f'Ошибка {error}.')
+                print(f'Ошибка {error} при парсинге.')
             else:
                 if len(page_vacancies) == 0:
                     break
