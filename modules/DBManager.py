@@ -3,6 +3,9 @@ import psycopg2
 
 
 class DBManager:
+    """
+    Класс для работы с данными в таблицах базы данных.
+    """
 
     def __init__(self):
         self.connection = psycopg2.connect(
@@ -13,13 +16,20 @@ class DBManager:
         )
         self.cursor = self.connection.cursor()
 
-
     def get_companies_and_vacancies_count(self) -> list[Any]:
-        """получает список всех компаний и количество вакансий у каждой компании"""
+        """
+        Получает список компаний и количество вакансий у каждой.
+        Возвращает список словарей в формате:
+        {
+        "employer_name": "название компании",
+        "vacancies_count": "количество вакансий"
+        }
+        """
 
         record = []
         self.cursor.execute("SELECT * FROM employers")
         employers = self.cursor.fetchall()
+
         for row in employers:
             employer_hh_id = row[1]
             employer_name = row[2]
@@ -30,8 +40,18 @@ class DBManager:
         return record
 
     def get_all_vacancies(self):
-        """получает список всех вакансий с указанием названия компании,
-        названия вакансии, зарплаты и ссылки на вакансию"""
+        """
+        Получает список всех вакансий с указанием названия компании,
+        названия вакансии, зарплаты и ссылки на вакансию.
+        Возвращает список словарей в формате:
+        {
+        "employer_name": "название компании",
+        "vacancy_name": "название вакансии",
+        "vacancy_salary_from": "зарплата от",
+        "vacancy_salary_to": "зарплата до",
+        "vacancy_url": "url-адрес",
+        }
+        """
 
         record = []
         self.cursor.execute("SELECT * FROM vacancies")
@@ -57,9 +77,11 @@ class DBManager:
 
         return record
 
-
     def get_avg_salary(self):
-        """получает среднюю зарплату по вакансиям"""
+        """
+        Получает среднюю зарплату по вакансиям.
+        Возвращает число.
+        """
 
         self.cursor.execute("SELECT round(AVG(salary_from)) FROM vacancies WHERE salary_from > 0")
         average_salary_from = self.cursor.fetchall()[0][0]
@@ -69,9 +91,11 @@ class DBManager:
 
         return average_salary
 
-
     def get_vacancies_with_higher_salary(self):
-        """получает список всех вакансий, у которых зарплата выше средней по всем вакансиям"""
+        """
+        Получает список всех вакансий, у которых зарплата выше средней по всем вакансиям.
+        Возвращает список словарей аналогично функции get_all_vacancies.
+        """
 
         result_vacancies = []
         all_vacancies = DBManager.get_all_vacancies(self)
@@ -82,14 +106,18 @@ class DBManager:
 
         return result_vacancies
 
-
-    def get_vacancies_with_keyword(self, keyword: str):
-        """получает список всех вакансий, в названии которых содержатся переданные в метод слова, например “python”"""
+    def get_vacancies_with_keyword(self, keywords: list):
+        """
+        Получает список всех вакансий, в названии которых содержатся переданные в метод слова.
+        Возвращает список словарей аналогично функции get_all_vacancies.
+        ”"""
 
         result_vacancies = []
         vacancies = DBManager.get_all_vacancies(self)
+
         for vacancy in vacancies:
-            if keyword.lower() in vacancy["vacancy_name"].lower():
-                result_vacancies.append(vacancy)
+            for word in keywords:
+                if word.lower() in vacancy["vacancy_name"].lower():
+                    result_vacancies.append(vacancy)
 
         return result_vacancies
