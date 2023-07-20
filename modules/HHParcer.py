@@ -86,7 +86,7 @@ class Vacancy:
         self.salary_to = None
         self.vacancies = None
         self.params = {
-            "per_page": 10,
+            "per_page": 100,
             "text": None,
             "page": None,
             "employer_id": employer_id

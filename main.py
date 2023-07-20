@@ -41,7 +41,7 @@ def main():
     for employer in employers_list:
         employer_hh_id = employer["hh_id"]
         employer_name = employer["name"]
-        pages_count = 2
+        pages_count = 10
         hh = HHParcer.Vacancy(employer_hh_id, employer_name)
         vacancies = hh.get_vacancies(pages_count)
 
