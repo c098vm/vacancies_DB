@@ -3,6 +3,7 @@ from utils import utils
 
 
 def main():
+    print("*** VACANCY DATABASE ***")
     vacancy_primary_key = 1
     # счетчик primary_key для таблицы с вакансиями
 
@@ -12,7 +13,7 @@ def main():
     # employers_quantity = 10
 
     while True:
-        print(f"Введите количество интересующих компаний для загрузки резюме (не более 10).")
+        print(f"Введите количество интересующих компаний для загрузки вакансий (не более 10).")
         employers_quantity = (input(">>> "))
 
         if employers_quantity.isdigit():
