@@ -145,11 +145,11 @@ def print_vacancies(vacancies):
             vacancy_salary_to = "до " + \
                                 str(vacancy["vacancy_salary_to"]) + \
                                 " " if vacancy["vacancy_salary_to"] != 0 else ""
-            vacancy_salary = f"{vacancy_salary_from}{vacancy_salary_to}"
+            vacancy_salary = f"{vacancy_salary_from}{vacancy_salary_to}руб."
         vacancy_url = vacancy["vacancy_url"]
         print(f"Компания: {employer_name}.\n"
               f"Вакансия: {vacancy_name}.\n"
-              f"Зарплата: {vacancy_salary}руб.\n"
+              f"Зарплата: {vacancy_salary}\n"
               f"Ссылка: {vacancy_url}.\n")
 
 def print_employers(employers):
