@@ -85,9 +85,14 @@ class DBManager:
 
         self.cursor.execute("SELECT round(AVG(salary_from)) FROM vacancies WHERE salary_from > 0")
         average_salary_from = self.cursor.fetchall()[0][0]
+        if average_salary_from is None:
+            average_salary_from = 0
+
         self.cursor.execute("SELECT round(AVG(salary_to)) FROM vacancies where salary_to > 0")
         average_salary_to = self.cursor.fetchall()[0][0]
-        average_salary = (average_salary_from + average_salary_to) / 2
+        if average_salary_to is None:
+            average_salary_to = 0
+        average_salary = (int(average_salary_from) + int(average_salary_to)) / 2
 
         return average_salary
 

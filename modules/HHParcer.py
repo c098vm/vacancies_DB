@@ -60,8 +60,17 @@ class Employer:
             return None
 
         print()
-        print(f"Найдено {len(employer_data)} компаний. Введите порядковый номер интересующей компании.")
-        selected_employer_num = int(input(">>> ")) - 1
+        print(f"Найдено {len(employer_data)} компаний.")
+
+        while True:
+            print("Введите порядковый номер интересующей компании.")
+            selected_employer_num = int(input(">>> ")) - 1
+
+            if selected_employer_num not in range (0, len(employer_data)):
+                print("Введенное значение неверно!\n")
+            else:
+                break
+
         selected_employer_dict = employers_list[selected_employer_num]
         selected_employer_name = [value for value in selected_employer_dict.values()][1]
 

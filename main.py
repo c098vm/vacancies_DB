@@ -19,7 +19,7 @@ def main():
             employers_quantity = int(employers_quantity)
             if employers_quantity in range(1, 11):
                 break
-        print("Введенное значение неверно!")
+        print("Введенное значение неверно!\n")
     print()
 
     employers_list = []
@@ -96,7 +96,10 @@ def main():
             print()
             keywords = keystring.replace(" ", "").split(",")
             vacancies = dbm.get_vacancies_with_keyword(keywords)
-            utils.print_vacancies(vacancies)
+            if len(vacancies) == 0:
+                print("Вакансий не найдено.\n")
+            else:
+                utils.print_vacancies(vacancies)
         else:
             print("Введенное значение неверно!")
 
