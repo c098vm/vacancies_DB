@@ -1,45 +1,38 @@
 import psycopg2
 
-def drop_tables():
+
+def create_db(user, password):
     """
-    Удаляет таблицы employers и vacancies, если они ранее были созданы.
+    Создает базу данных vacancies и таблицы employers и vacancies.
     :return: None.
     """
 
-    connection = psycopg2.connect(
-        user="postgres",
-        password="postgres",
-        host="localhost",
-        database="vacancies"
-    )
-    cursor = connection.cursor()
+    print("\nПодключение к СУБД...", end=" ")
     try:
-        cursor.execute("drop table employers")
-        connection.commit()
+        connection = psycopg2.connect(
+            user=user,
+            password=password,
+            host="localhost",
+        )
     except Exception:
-        pass
-    try:
-        cursor.execute("drop table vacancies")
-        connection.commit()
-    except Exception:
-        pass
-    if connection:
-        cursor.close()
-        connection.close()
+        print(f'\nОшибка при подключении к СУБД.')
+        print("\nРабота программы завершена!")
+        exit()
+    else:
+        print("OK!")
 
-def create_tables():
-    """
-    Создает таблицы employers и vacancies.
-    :return: None.
-    """
+    connection.autocommit = True
+    cursor = connection.cursor()
+
+    cursor.execute("drop database if exists vacancies")
+    cursor.execute("create database vacancies")
 
     connection = psycopg2.connect(
-        user="postgres",
-        password="postgres",
-        host="localhost",
         database="vacancies"
     )
+
     cursor = connection.cursor()
+
     cursor.execute("CREATE TABLE employers("
                    "id SMALLINT PRIMARY KEY, "
                    "hh_id INT NOT NULL, "
@@ -55,11 +48,13 @@ def create_tables():
                    "url VARCHAR NOT NULL)"
                    )
     connection.commit()
+
     if connection:
         cursor.close()
         connection.close()
 
-def fill_employers_table(record_list):
+
+def fill_employers_table(user, password, record_list):
     """
     Заполняет таблицу employers данными из списка словарей.
     :param record_list: список словарей.
@@ -67,8 +62,8 @@ def fill_employers_table(record_list):
     """
 
     connection = psycopg2.connect(
-        user="postgres",
-        password="postgres",
+        user=user,
+        password=password,
         host="localhost",
         database="vacancies"
     )
@@ -90,7 +85,8 @@ def fill_employers_table(record_list):
         cursor.close()
         connection.close()
 
-def fill_vacancies_table(record_list, id=None):
+
+def fill_vacancies_table(user, password, record_list, id=None):
     """
     Заполняет таблицу vacancies данными из списка словарей.
     :param record_list: список словарей.
@@ -99,8 +95,8 @@ def fill_vacancies_table(record_list, id=None):
     """
 
     connection = psycopg2.connect(
-        user="postgres",
-        password="postgres",
+        user=user,
+        password=password,
         host="localhost",
         database="vacancies"
     )
@@ -127,6 +123,7 @@ def fill_vacancies_table(record_list, id=None):
         cursor.close()
         connection.close()
 
+
 def print_vacancies(vacancies):
     """
     Распечатывает список вакансий в читаемом формате.
@@ -147,10 +144,11 @@ def print_vacancies(vacancies):
                                 " " if vacancy["vacancy_salary_to"] != 0 else ""
             vacancy_salary = f"{vacancy_salary_from}{vacancy_salary_to}руб."
         vacancy_url = vacancy["vacancy_url"]
-        print(f"Компания: {employer_name}.\n"
+        print(f"\nКомпания: {employer_name}.\n"
               f"Вакансия: {vacancy_name}.\n"
               f"Зарплата: {vacancy_salary}\n"
-              f"Ссылка: {vacancy_url}.\n")
+              f"Ссылка: {vacancy_url}.")
+    print(f"\nВсего выведено вакансий - {len(vacancies)}.")
 
 def print_employers(employers):
     """
@@ -163,6 +161,7 @@ def print_employers(employers):
         employer_name = employer["employer_name"]
         vacancies_count = employer["vacancies_count"]
         print(f"Компания: {employer_name}. Количество вакансий в базе данных: {vacancies_count}.")
+
 
 def print_average_salary(average_salary):
     """

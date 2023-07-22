@@ -7,10 +7,12 @@ class DBManager:
     Класс для работы с данными в таблицах базы данных.
     """
 
-    def __init__(self):
+    def __init__(self, user, password):
+        self.user = user
+        self.password = password
         self.connection = psycopg2.connect(
-            user="postgres",
-            password="postgres",
+            user=self.user,
+            password=self.password,
             host="localhost",
             database="vacancies"
         )
