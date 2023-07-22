@@ -1,5 +1,4 @@
 import requests
-from modules.error import ParsingError
 
 
 class Employer:
@@ -23,10 +22,15 @@ class Employer:
         Метод запроса json-данных через API.
         """
 
-        response = requests.get(url=self.url, headers=self.headers, params=self.params)
-        if response.status_code != 200:
-            raise ParsingError('Ошибка полученя данных.')
-        return response.json()["items"]
+        print("\nЗагрузка...")
+        try:
+            response = requests.get(url=self.url, headers=self.headers, params=self.params)
+        except:
+            print("\nОшибка подключения к API HeadHunter.")
+            print("\nРабота программы завершена!")
+            exit()
+        else:
+            return response.json()["items"]
 
     def select_employer_id(self):
         """
@@ -38,8 +42,6 @@ class Employer:
         }
         """
 
-        print()
-        print("Загрузка...")
         employer_data = self.get_request()
 
         employers_list = []
@@ -55,26 +57,24 @@ class Employer:
             index += 1
 
         if len(employer_data) == 0:
-            print("По такому ключевому слову компаний не найдено.")
-            print()
+            print("\nПо такому ключевому слову компаний не найдено.")
             return None
 
-        print()
-        print(f"Найдено {len(employer_data)} компаний.")
+        print(f"\nНайдено {len(employer_data)} компаний.")
 
         while True:
-            print("Введите порядковый номер интересующей компании.")
+            print("\nВведите порядковый номер интересующей компании.")
             selected_employer_num = int(input(">>> ")) - 1
 
-            if selected_employer_num not in range (0, len(employer_data)):
-                print("Введенное значение неверно!\n")
+            if selected_employer_num not in range(0, len(employer_data)):
+                print("\nВведенное значение неверно!\n")
             else:
                 break
 
         selected_employer_dict = employers_list[selected_employer_num]
         selected_employer_name = [value for value in selected_employer_dict.values()][1]
 
-        print(f'Выбрана компания "{selected_employer_name}".')
+        print(f'\nВыбрана компания "{selected_employer_name}".')
         print()
 
         return selected_employer_dict
@@ -106,11 +106,14 @@ class Vacancy:
         Метод запроса json-данных через API.
         """
 
-        response = requests.get(url=self.url, headers=self.headers, params=self.params)
-        if response.status_code != 200:
-            raise ParsingError('Ошибка полученя данных.')
-
-        return response.json()["items"]
+        try:
+            response = requests.get(url=self.url, headers=self.headers, params=self.params)
+        except:
+            print("\nОшибка подключения к API HeadHunter.")
+            print("\nРабота программы завершена!")
+            exit()
+        else:
+            return response.json()["items"]
 
     def get_vacancies(self, page_count):
         """
@@ -127,17 +130,19 @@ class Vacancy:
         }
         """
 
-
         self.vacancies = []
         salary_from = 0
         salary_to = 0
         for page in range(page_count):
             page_vacancies = []
             self.params["page"] = page
+
             try:
                 page_vacancies = self.get_request()
-            except ParsingError as error:
-                print(f'Ошибка {error} при парсинге.')
+            except:
+                print("\nОшибка получения данных о вакансиях с HeadHunter.")
+                print("\nРабота программы завершена!")
+                exit()
             else:
                 if len(page_vacancies) == 0:
                     break

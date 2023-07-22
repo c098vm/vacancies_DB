@@ -3,17 +3,22 @@ from utils import utils
 
 
 def main():
-    print("*** VACANCY DATABASE ***")
-    vacancy_primary_key = 1
-    # счетчик primary_key для таблицы с вакансиями
+    print("\n*** VACANCY DATABASE ***")
+    vacancy_primary_key = 1 # счетчик primary_key для таблицы с вакансиями
 
-    utils.drop_tables()
-    utils.create_tables()
+    print("\nДля работы программы необходимо подключение к СУБД PostgreSQL.\n\n"
+          "Введите данные пользователя для подключения.")
+    user = input("Пользователь: ")
+    password = input("Пароль: ")
+    # user = "postgres"
+    # password = "postgres"
+
+    utils.create_db(user, password)
 
     # employers_quantity = 10
 
     while True:
-        print(f"Введите количество интересующих компаний для загрузки вакансий (не более 10).")
+        print(f"\nВведите количество интересующих компаний для загрузки вакансий (не более 10).")
         employers_quantity = (input(">>> "))
 
         if employers_quantity.isdigit():
@@ -37,10 +42,10 @@ def main():
         employers_list.append(employer_id)
 
     if len(employers_list) == 0:
-        print("Работа программы завершена!")
+        print("\nРабота программы завершена!")
         exit()
 
-    utils.fill_employers_table(employers_list)
+    utils.fill_employers_table(user, password, employers_list)
 
     print('Загрузка вакансий...')
 
@@ -51,20 +56,17 @@ def main():
         hh = HHParcer.Vacancy(employer_hh_id, employer_name)
         vacancies = hh.get_vacancies(pages_count)
 
-        utils.fill_vacancies_table(vacancies, vacancy_primary_key)
+        utils.fill_vacancies_table(user, password, vacancies, vacancy_primary_key)
         vacancy_primary_key += len(vacancies)
 
-    print()
     if vacancy_primary_key == 1:
-        print("По выбранным компаниям вакансий не найдено.\n")
-        print("Работа программы завершена!")
+        print("\nПо выбранным компаниям вакансий не найдено.")
+        print("\nРабота программы завершена!")
         exit()
-    print(f"Всего по выбранным компаниям загружено вакансий - {vacancy_primary_key - 1}.")
-
-    print()
+    print(f"\nВсего по выбранным компаниям загружено вакансий - {vacancy_primary_key - 1}.")
 
     while True:
-        print("Введите номер команды:\n"
+        print("\nВведите номер команды:\n"
               "1 - вывести cписок компаний c количеством вакансий по каждой компании.\n"
               "2 - вывести список всех вакансий.\n"
               "3 - вывести среднюю зарплату по всем вакансиям.\n"
@@ -72,9 +74,8 @@ def main():
               "5 - выполнить поиск вакансий по ключевым словам.\n"
               "0 - выход")
         command = input(">>> ")
-        print()
 
-        dbm = DBManager.DBManager()
+        dbm = DBManager.DBManager(user, password)
 
         if command == "0":
             print("Работа программы завершена!")
@@ -92,7 +93,7 @@ def main():
             vacancies = dbm.get_vacancies_with_higher_salary()
             utils.print_vacancies(vacancies)
         elif command == "5":
-            print("Введите ключевые слова (фрагменты слов) через запятую.")
+            print("\nВведите ключевые слова (фрагменты слов) через запятую.")
             keystring = input(">>> ")
             print()
             keywords = keystring.replace(" ", "").split(",")
@@ -102,9 +103,7 @@ def main():
             else:
                 utils.print_vacancies(vacancies)
         else:
-            print("Введенное значение неверно!")
-
-        print()
+            print("\nВведенное значение неверно!")
 
 
 if __name__ == '__main__':
